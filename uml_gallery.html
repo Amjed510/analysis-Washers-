@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مخططات UML - نظام WashPOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #00d4ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .diagram-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .diagram-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .diagram-header {
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(123, 47, 247, 0.2));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .diagram-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .diagram-header span {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .diagram-image {
+            padding: 15px;
+            background: #fff;
+        }
+
+        .diagram-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .diagram-image img:hover {
+            transform: scale(1.02);
+        }
+
+        .legend {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 10px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>📐 مخططات UML</h1>
+        <p>نظام WashPOS - نقاط البيع للمغاسل</p>
+    </header>
+
+    <div class="gallery">
+        <!-- Use Case Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <h3>📋 مخطط حالات الاستخدام</h3>
+                <span>Use Case Diagram</span>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_use_case.png" alt="Use Case Diagram" onclick="openModal(this.src)">
+            </div>
+            <div class="legend">
+                الجهات الفاعلة: الكاشير، المشرف، المدير | 16 حالة استخدام
+            </div>
+        </div>
+
+        <!-- Class Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <h3>🏗️ مخطط الفئات</h3>
+                <span>Class Diagram</span>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_class.png" alt="Class Diagram" onclick="openModal(this.src)">
+            </div>
+            <div class="legend">
+                الفئات: Order, OrderItem, Service, Customer, Shift, Payment, User
+            </div>
+        </div>
+
+        <!-- Sequence Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <h3>🔄 مخطط التسلسل - الدفع بالبطاقة</h3>
+                <span>Sequence Diagram - Card Payment</span>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_sequence_payment.png" alt="Sequence Diagram" onclick="openModal(this.src)">
+            </div>
+            <div class="legend">
+                التدفق: الكاشير → POS → API → بنك إنماء → طباعة الفاتورة
+            </div>
+        </div>
+
+        <!-- Activity Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <h3>📊 مخطط النشاط - إنشاء طلب</h3>
+                <span>Activity Diagram - Create Order</span>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_activity_order.png" alt="Activity Diagram" onclick="openModal(this.src)">
+            </div>
+            <div class="legend">
+                التدفق: اختيار الخدمات → الدفع → الطباعة → المزامنة
+            </div>
+        </div>
+
+        <!-- Component Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <h3>🧩 مخطط المكونات</h3>
+                <span>Component Diagram</span>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_component.png" alt="Component Diagram" onclick="openModal(this.src)">
+            </div>
+            <div class="legend">
+                الطبقات: Presentation → Domain → Data → Core Services
+            </div>
+        </div>
+
+        <!-- State Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <h3>🔀 مخطط الحالة</h3>
+                <span>State Diagram</span>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_state.png" alt="State Diagram" onclick="openModal(this.src)">
+            </div>
+            <div class="legend">
+                حالات الطلب: Draft → Pending → Processing → Completed
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <span class="modal-close">×</span>
+        <img src="" alt="Full size diagram" id="modalImage">
+    </div>
+
+    <footer class="footer">
+        <p>📋 مخططات UML لنظام WashPOS | ديسمبر 2024</p>
+    </footer>
+
+    <script>
+        function openModal(src) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('imageModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

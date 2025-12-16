@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مخططات UML بالعربي - نظام WashPOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 50%, #415a77 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #00b4d8, #90e0ef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: #adb5bd;
+            font-size: 1.2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(550px, 1fr));
+            gap: 35px;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .diagram-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .diagram-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 180, 216, 0.2);
+            border-color: rgba(0, 180, 216, 0.3);
+        }
+
+        .diagram-header {
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(0, 180, 216, 0.15), rgba(144, 224, 239, 0.08));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .diagram-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .diagram-title h3 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            color: #e9ecef;
+        }
+
+        .diagram-title span {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .diagram-image {
+            padding: 20px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            min-height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .diagram-image img {
+            max-width: 100%;
+            max-height: 400px;
+            display: block;
+            cursor: zoom-in;
+            transition: transform 0.3s;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .diagram-image img:hover {
+            transform: scale(1.02);
+        }
+
+        .diagram-desc {
+            padding: 20px 25px;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 0.95rem;
+            color: #adb5bd;
+            line-height: 1.8;
+        }
+
+        .diagram-desc strong {
+            color: #00b4d8;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.97);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0, 180, 216, 0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 180, 216, 0.3);
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3rem;
+            color: #fff;
+            cursor: pointer;
+            padding: 20px;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .modal-nav:hover {
+            opacity: 1;
+        }
+
+        .modal-prev { right: 30px; }
+        .modal-next { left: 30px; }
+
+        .footer {
+            text-align: center;
+            padding: 50px 20px;
+            color: #495057;
+        }
+
+        .footer a {
+            color: #00b4d8;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>📐 مخططات UML بالعربي</h1>
+        <p>نظام WashPOS - نقاط البيع للمغاسل</p>
+        <div class="badge">✨ جميع النصوص باللغة العربية</div>
+    </header>
+
+    <div class="gallery">
+        <!-- Use Case Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <div class="diagram-icon">📋</div>
+                <div class="diagram-title">
+                    <h3>مخطط حالات الاستخدام</h3>
+                    <span>Use Case Diagram</span>
+                </div>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_ar_usecase.png" alt="مخطط حالات الاستخدام" onclick="openModal(0)">
+            </div>
+            <div class="diagram-desc">
+                <strong>الجهات الفاعلة:</strong> الكاشير، المشرف، المدير، العميل<br>
+                <strong>حالات الاستخدام:</strong> إنشاء طلب، الدفع، الطباعة، إدارة الورديات، التقارير
+            </div>
+        </div>
+
+        <!-- Class Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <div class="diagram-icon">🏗️</div>
+                <div class="diagram-title">
+                    <h3>مخطط الفئات</h3>
+                    <span>Class Diagram</span>
+                </div>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_ar_class.png" alt="مخطط الفئات" onclick="openModal(1)">
+            </div>
+            <div class="diagram-desc">
+                <strong>الفئات الرئيسية:</strong> الطلب، عنصر الطلب، الخدمة، العميل، الوردية، الدفع<br>
+                <strong>العلاقات:</strong> التكوين، الارتباط، التبعية
+            </div>
+        </div>
+
+        <!-- Sequence Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <div class="diagram-icon">🔄</div>
+                <div class="diagram-title">
+                    <h3>مخطط التسلسل - الدفع بالبطاقة</h3>
+                    <span>Sequence Diagram</span>
+                </div>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_ar_sequence.png" alt="مخطط التسلسل" onclick="openModal(2)">
+            </div>
+            <div class="diagram-desc">
+                <strong>التدفق:</strong> الكاشير ← واجهة POS ← متحكم الدفع ← بنك إنماء ← طباعة<br>
+                <strong>السيناريوهات:</strong> موافقة، رفض، انتهاء المهلة
+            </div>
+        </div>
+
+        <!-- Activity Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <div class="diagram-icon">📊</div>
+                <div class="diagram-title">
+                    <h3>مخطط النشاط - إنشاء طلب</h3>
+                    <span>Activity Diagram</span>
+                </div>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_ar_activity.png" alt="مخطط النشاط" onclick="openModal(3)">
+            </div>
+            <div class="diagram-desc">
+                <strong>المراحل:</strong> اختيار الخدمات ← الولاء ← اختيار الدفع ← المعالجة ← الطباعة<br>
+                <strong>القرارات:</strong> نقدي/بطاقة، متصل/غير متصل
+            </div>
+        </div>
+
+        <!-- Component Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <div class="diagram-icon">🧩</div>
+                <div class="diagram-title">
+                    <h3>مخطط المكونات</h3>
+                    <span>Component Diagram</span>
+                </div>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_ar_component.png" alt="مخطط المكونات" onclick="openModal(4)">
+            </div>
+            <div class="diagram-desc">
+                <strong>الطبقات:</strong> طبقة العرض، طبقة المنطق، طبقة البيانات، الخدمات الأساسية<br>
+                <strong>الأنظمة الخارجية:</strong> جهاز SUNMI، بنك إنماء، السحابة
+            </div>
+        </div>
+
+        <!-- State Diagram -->
+        <div class="diagram-card">
+            <div class="diagram-header">
+                <div class="diagram-icon">🔀</div>
+                <div class="diagram-title">
+                    <h3>مخطط الحالة</h3>
+                    <span>State Diagram</span>
+                </div>
+            </div>
+            <div class="diagram-image">
+                <img src="uml_ar_state.png" alt="مخطط الحالة" onclick="openModal(5)">
+            </div>
+            <div class="diagram-desc">
+                <strong>حالات الطلب:</strong> مسودة ← قيد الانتظار ← قيد المعالجة ← مكتمل/فاشل/ملغي<br>
+                <strong>حالات المزامنة:</strong> قيد الانتظار ← جاري المزامنة ← تمت/فشل
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <span class="modal-close">×</span>
+        <span class="modal-nav modal-prev" onclick="event.stopPropagation(); prevImage()">‹</span>
+        <img src="" alt="مخطط بالحجم الكامل" id="modalImage">
+        <span class="modal-nav modal-next" onclick="event.stopPropagation(); nextImage()">›</span>
+    </div>
+
+    <footer class="footer">
+        <p>📐 مخططات UML لنظام WashPOS | ديسمبر 2024</p>
+        <p><a href="uml_gallery.html">← العودة للنسخة الإنجليزية</a></p>
+    </footer>
+
+    <script>
+        const images = [
+            'uml_ar_usecase.png',
+            'uml_ar_class.png',
+            'uml_ar_sequence.png',
+            'uml_ar_activity.png',
+            'uml_ar_component.png',
+            'uml_ar_state.png'
+        ];
+        let currentIndex = 0;
+
+        function openModal(index) {
+            currentIndex = index;
+            document.getElementById('modalImage').src = images[index];
+            document.getElementById('imageModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            document.getElementById('modalImage').src = images[currentIndex];
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            document.getElementById('modalImage').src = images[currentIndex];
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'ArrowLeft') prevImage();
+            if (e.key === 'ArrowRight') nextImage();
+        });
+    </script>
+</body>
+</html>

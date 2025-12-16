@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>السيناريو الثاني - Cloud-Centric | WashPOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --primary-dark: #0a58ca;
+            --secondary: #6c757d;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --text-muted: #8b949e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.8;
+        }
+
+        /* Header */
+        .hero {
+            background: linear-gradient(135deg, #0a58ca 0%, #0d6efd 50%, #6ea8fe 100%);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+            margin: 5px;
+        }
+
+        .badge.online {
+            background: rgba(13, 110, 253, 0.3);
+            border: 2px solid #6ea8fe;
+        }
+
+        .badge.warning {
+            background: rgba(255, 193, 7, 0.3);
+            border: 2px solid #ffc107;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav a {
+            color: var(--text);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .nav a:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .section-title h2 {
+            font-size: 1.6rem;
+            color: var(--primary);
+        }
+
+        .section-title span {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(110, 168, 254, 0.05));
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Mermaid Diagrams */
+        .mermaid-container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .info-box.primary {
+            background: rgba(13, 110, 253, 0.1);
+            border: 1px solid var(--primary);
+        }
+
+        .info-box.warning {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid var(--warning);
+        }
+
+        .info-box.danger {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid var(--danger);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .feature-card {
+            background: rgba(13, 110, 253, 0.05);
+            border: 1px solid rgba(13, 110, 253, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: rgba(13, 110, 253, 0.1);
+            color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-content">
+            <h1>☁️ السيناريو الثاني</h1>
+            <p>نظام WashPOS بهيكلية Cloud-Centric</p>
+            <div class="badge warning">⚠️ يتطلب اتصال بالإنترنت</div>
+            <div class="badge online">☁️ السيرفر مصدر الحقيقة</div>
+            <div class="badge">⚡ معالجة فورية</div>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#philosophy">الفلسفة</a>
+            <a href="#features">المميزات</a>
+            <a href="#sequence-payment">تسلسل الدفع</a>
+            <a href="#sequence-blocking">شاشة الحظر</a>
+            <a href="#component">المكونات</a>
+            <a href="#state">الحالات</a>
+            <a href="#activity">النشاط</a>
+            <a href="#comparison">المقارنة</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Philosophy Section -->
+        <section class="section" id="philosophy">
+            <div class="section-header">
+                <div class="section-icon">💡</div>
+                <div class="section-title">
+                    <h2>الفلسفة المعمارية</h2>
+                    <span>Architectural Philosophy</span>
+                </div>
+            </div>
+
+            <div class="info-box primary">
+                <h3>🎯 المبدأ الأساسي</h3>
+                <p style="font-size: 1.5rem; margin-top: 10px; font-weight: bold;">
+                    "السيرفر هو مصدر الحقيقة الوحيد"
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">☁️</div>
+                    <h4>Cloud-First</h4>
+                    <p>جميع البيانات تُحفظ مباشرة على السيرفر</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h4>Real-Time</h4>
+                    <p>لا حاجة للمزامنة - البيانات حقيقية فوراً</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h4>لا تعارضات</h4>
+                    <p>مصدر واحد للبيانات = لا صراعات</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛠️</div>
+                    <h4>بساطة التطوير</h4>
+                    <p>لا حاجة لمنطق المزامنة المعقد</p>
+                </div>
+            </div>
+
+            <div class="info-box danger">
+                <h3>⚠️ تحذير هام</h3>
+                <p style="margin-top: 10px;">
+                    هذا السيناريو يعتمد كلياً على الاتصال بالإنترنت. عند انقطاع الإنترنت، تتوقف جميع العمليات بما فيها الدفع النقدي!
+                </p>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section" id="features">
+            <div class="section-header">
+                <div class="section-icon">✨</div>
+                <div class="section-title">
+                    <h2>المميزات الرئيسية</h2>
+                    <span>Key Features</span>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>الميزة</th>
+                        <th>الحالة</th>
+                        <th>الوصف</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الدفع النقدي</td>
+                        <td>⚠️ Online</td>
+                        <td>يتطلب اتصال لحفظ الطلب على السيرفر</td>
+                    </tr>
+                    <tr>
+                        <td>الدفع بالبطاقة</td>
+                        <td>⚠️ Online</td>
+                        <td>يتطلب اتصال مستقر للتواصل مع البنك</td>
+                    </tr>
+                    <tr>
+                        <td>التقارير</td>
+                        <td>✅ Real-Time</td>
+                        <td>تقارير لحظية من السيرفر مباشرة</td>
+                    </tr>
+                    <tr>
+                        <td>إدارة المخزون</td>
+                        <td>✅ Unified</td>
+                        <td>بيانات موحدة لجميع الفروع</td>
+                    </tr>
+                    <tr>
+                        <td>المزامنة</td>
+                        <td>❌ غير مطلوبة</td>
+                        <td>لا حاجة لها - البيانات على السيرفر</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Sequence Diagram - Payment -->
+        <section class="section" id="sequence-payment">
+            <div class="section-header">
+                <div class="section-icon">💳</div>
+                <div class="section-title">
+                    <h2>مخطط تسلسل الدفع</h2>
+                    <span>Payment Sequence Diagram</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>☁️ تدفق الدفع (يتطلب إنترنت)</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-box warning">
+                        <strong>ملاحظة:</strong> جميع العمليات تتطلب اتصال بالإنترنت
+                    </div>
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant K as 🧑‍💼 الكاشير
+    participant UI as 📱 واجهة POS
+    participant Conn as 📶 مراقب الاتصال
+    participant API as 🌐 عميل API
+    participant Server as ☁️ السيرفر
+    participant Print as 🖨️ الطابعة
+
+    K->>UI: الضغط على "دفع"
+    UI->>Conn: التحقق من الاتصال
+
+    alt غير متصل
+        Conn-->>UI: ❌ لا يوجد اتصال
+        UI->>UI: 🚫 شاشة الحظر
+        UI-->>K: انتظار عودة الاتصال
+    else متصل
+        Conn-->>UI: ✅ متصل
+        UI->>API: POST /orders
+        API->>Server: إنشاء الطلب
+        Server-->>API: ✅ orderId
+        API-->>UI: نجاح
+        UI->>Print: طباعة الفاتورة
+        Print-->>UI: ✅
+        UI-->>K: تم الطلب
+    end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sequence Diagram - Blocking -->
+        <section class="section" id="sequence-blocking">
+            <div class="section-header">
+                <div class="section-icon">🚫</div>
+                <div class="section-title">
+                    <h2>مخطط شاشة الحظر</h2>
+                    <span>Blocking Screen Sequence</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>🔴 التعامل مع انقطاع الاتصال</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant K as 🧑‍💼 الكاشير
+    participant Conn as 📶 مراقب الاتصال
+    participant Modal as 🚫 شاشة الحظر
+
+    loop كل 30 ثانية
+        Conn->>Conn: فحص الاتصال
+    end
+
+    Conn->>Conn: ⚡ فقد الاتصال
+    Conn->>Modal: عرض شاشة الحظر
+
+    activate Modal
+    Note over Modal: 📡 لا يوجد اتصال<br/><br/>يرجى التحقق من الإنترنت<br/><br/>[⟳ إعادة المحاولة]
+
+    Modal-->>K: ❌ منع جميع العمليات
+
+    K->>Modal: الضغط على "إعادة المحاولة"
+    Modal->>Conn: فحص الاتصال
+
+    alt لا يزال غير متصل
+        Conn-->>Modal: ❌
+        Modal-->>K: البقاء في شاشة الحظر
+    else عاد الاتصال
+        Conn-->>Modal: ✅
+        deactivate Modal
+        Conn-->>K: ✅ يمكنك المتابعة
+    end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Component Diagram -->
+        <section class="section" id="component">
+            <div class="section-header">
+                <div class="section-icon">🧩</div>
+                <div class="section-title">
+                    <h2>مخطط المكونات</h2>
+                    <span>Component Diagram</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>🏗️ بنية Cloud-Centric</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+flowchart TB
+    subgraph App["📱 تطبيق WashPOS"]
+        subgraph Presentation["طبقة العرض"]
+            Views["الشاشات"]
+            Controllers["متحكمات GetX"]
+            BlockingScreen["🚫 شاشة الحظر"]
+        end
+
+        subgraph Data["طبقة البيانات"]
+            subgraph Remote["🔵 المصدر الوحيد"]
+                DioClient["🌐 Dio HTTP"]
+                Interceptors["Interceptors"]
+            end
+        end
+
+        subgraph Core["الخدمات"]
+            ConnService["📶 خدمة الاتصال"]
+            PrinterSvc["🖨️ خدمة الطباعة"]
+        end
+    end
+
+    subgraph Cloud["☁️ السحابة - إلزامي"]
+        API["واجهة REST API"]
+        DB[("PostgreSQL")]
+        PayGW["بوابة إنماء"]
+    end
+
+    Views --> Controllers
+    Controllers --> DioClient
+    DioClient --> Interceptors
+    ConnService --> BlockingScreen
+    ConnService --> DioClient
+    
+    Interceptors --> API
+    API --> DB
+    API --> PayGW
+
+    style Remote fill:#cce5ff,stroke:#007bff
+    style BlockingScreen fill:#f8d7da,stroke:#dc3545
+    style Cloud fill:#cce5ff,stroke:#0d6efd
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- State Diagram -->
+        <section class="section" id="state">
+            <div class="section-header">
+                <div class="section-icon">🔀</div>
+                <div class="section-title">
+                    <h2>مخطط حالات الاتصال</h2>
+                    <span>Connection State Diagram</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>📶 حالات الاتصال وتأثيرها</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+stateDiagram-v2
+    [*] --> جاري_الفحص: بدء التطبيق
+
+    جاري_الفحص --> متصل: ✅ ping نجح
+    جاري_الفحص --> غير_متصل: ❌ ping فشل
+    
+    متصل --> غير_متصل: فقد الاتصال
+    غير_متصل --> جاري_الفحص: إعادة المحاولة
+    
+    متصل --> متصل: ping كل 30 ثانية
+
+    state متصل {
+        [*] --> واجهة_عادية
+        واجهة_عادية: ✅ جميع العمليات متاحة
+    }
+
+    state غير_متصل {
+        [*] --> شاشة_حظر
+        شاشة_حظر: 🚫 جميع العمليات محظورة
+    }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity Diagram -->
+        <section class="section" id="activity">
+            <div class="section-header">
+                <div class="section-icon">📊</div>
+                <div class="section-title">
+                    <h2>مخطط نشاط الدفع</h2>
+                    <span>Payment Activity Diagram</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>🔄 تدفق العمل الكامل</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+flowchart TD
+    Start([البداية]) --> CheckConn{فحص الاتصال}
+    
+    CheckConn -->|❌ غير متصل| BlockScreen[🚫 شاشة الحظر]
+    BlockScreen --> RetryConn{إعادة الفحص}
+    RetryConn -->|❌| BlockScreen
+    RetryConn -->|✅| Login
+    
+    CheckConn -->|✅ متصل| Login[تسجيل الدخول]
+    
+    Login --> AuthAPI{التحقق من السيرفر}
+    AuthAPI -->|❌| BlockScreen
+    AuthAPI -->|✅| POSScreen[شاشة POS]
+    
+    POSScreen --> Select[اختيار الخدمات]
+    Select --> Pay{الدفع}
+    
+    Pay --> PreCheck{فحص الاتصال}
+    PreCheck -->|❌| BlockScreen
+    PreCheck -->|✅| SendAPI[إرسال للسيرفر]
+    
+    SendAPI --> Result{النتيجة}
+    Result -->|✅| Print[طباعة الفاتورة]
+    Result -->|❌| Error[عرض الخطأ]
+    Result -->|⏰| Timeout[التحقق من الحالة]
+    
+    Error --> POSScreen
+    Timeout --> Print
+    Print --> Success([✅ تم])
+
+    style BlockScreen fill:#f8d7da,stroke:#dc3545
+    style SendAPI fill:#cce5ff,stroke:#0d6efd
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison -->
+        <section class="section" id="comparison">
+            <div class="section-header">
+                <div class="section-icon">📊</div>
+                <div class="section-title">
+                    <h2>المقارنة مع السيناريو الأول</h2>
+                    <span>Comparison with Scenario 1</span>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>المعيار</th>
+                        <th>السيناريو الأول (Offline-First)</th>
+                        <th style="background: rgba(13,110,253,0.2);">السيناريو الثاني (Cloud-Centric)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الاتصال بالإنترنت</td>
+                        <td>اختياري</td>
+                        <td><strong>إلزامي</strong></td>
+                    </tr>
+                    <tr>
+                        <td>قاعدة البيانات المحلية</td>
+                        <td>Isar (أساسية)</td>
+                        <td><strong>لا يوجد</strong></td>
+                    </tr>
+                    <tr>
+                        <td>الدفع النقدي Offline</td>
+                        <td>✅ نعم</td>
+                        <td><strong>❌ لا</strong></td>
+                    </tr>
+                    <tr>
+                        <td>التقارير اللحظية</td>
+                        <td>بعد المزامنة</td>
+                        <td><strong>✅ فوري</strong></td>
+                    </tr>
+                    <tr>
+                        <td>تعقيد التطوير</td>
+                        <td>عالي</td>
+                        <td><strong>منخفض</strong></td>
+                    </tr>
+                    <tr>
+                        <td>توحيد البيانات</td>
+                        <td>بعد المزامنة</td>
+                        <td><strong>فوري</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box primary" style="margin-top: 30px;">
+                <h3>✅ متى تختار هذا السيناريو؟</h3>
+                <ul style="margin-top: 15px; padding-right: 20px;">
+                    <li>المغاسل في مناطق ذات شبكة مستقرة وقوية</li>
+                    <li>عندما تحتاج تقارير لحظية لجميع الفروع</li>
+                    <li>عندما يكون التطوير السريع أولوية</li>
+                    <li>عندما تريد تجنب تعقيدات المزامنة</li>
+                </ul>
+            </div>
+
+            <div class="info-box danger" style="margin-top: 20px;">
+                <h3>⚠️ لا تختار هذا السيناريو إذا:</h3>
+                <ul style="margin-top: 15px; padding-right: 20px;">
+                    <li>المغسلة في موقف سفلي (Basement)</li>
+                    <li>المنطقة ذات شبكة ضعيفة أو غير مستقرة</li>
+                    <li>لا يمكن تحمل توقف العمل عند انقطاع الإنترنت</li>
+                    <li>معظم المدفوعات نقدية</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>📐 السيناريو الثاني - Cloud-Centric | نظام WashPOS</p>
+        <p><a href="../Scenario1_OfflineFirst/index.html">← عرض السيناريو الأول (Offline-First)</a></p>
+    </footer>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            flowchart: { useMaxWidth: true }
+        });
+    </script>
+</body>
+</html>

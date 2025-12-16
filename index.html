@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة مغاسل السيارات - POS & Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --secondary: #10b981;
+            --accent: #ef4444;
+            --dark: #0f172a;
+            --light: #f1f5f9;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #e2e8f0;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, rgba(245,158,11,0.9), rgba(239,68,68,0.8)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>');
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero p { font-size: 1.3rem; opacity: 0.95; margin-bottom: 20px; }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            margin: 5px;
+        }
+        
+        .badge-new {
+            background: var(--accent);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        nav {
+            background: rgba(15,23,42,0.95);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(245,158,11,0.3);
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: #e2e8f0;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        nav a:hover { background: var(--primary); color: white; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+        
+        .section {
+            background: rgba(30,41,59,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        
+        .card {
+            background: rgba(15,23,42,0.6);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+        
+        .card h3 { color: var(--primary); margin-bottom: 12px; font-size: 1.1rem; }
+        
+        .tag {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-card .number { font-size: 2.2rem; font-weight: 800; }
+        .stat-card .label { font-size: 0.9rem; opacity: 0.9; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 15px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { background: rgba(245,158,11,0.2); color: var(--primary); font-weight: 600; }
+        tr:hover { background: rgba(255,255,255,0.05); }
+        
+        .alert {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .alert-warning {
+            background: rgba(245,158,11,0.2);
+            border: 1px solid var(--warning);
+        }
+        
+        .alert-danger {
+            background: rgba(239,68,68,0.2);
+            border: 1px solid var(--danger);
+        }
+        
+        .alert-success {
+            background: rgba(34,197,94,0.2);
+            border: 1px solid var(--success);
+        }
+        
+        .priority-high {
+            background: var(--danger);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .deleted {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+        
+        .new-badge {
+            background: var(--accent);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-right: 5px;
+        }
+        
+        .comparison-table td:nth-child(2) { color: #94a3b8; }
+        .comparison-table td:nth-child(3) { color: var(--success); font-weight: 600; }
+        
+        .device-box {
+            background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(15,23,42,0.8));
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .device-box h3 { font-size: 1.5rem; margin-bottom: 15px; }
+        
+        .flow-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .flow-step {
+            background: rgba(15,23,42,0.8);
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: 2px solid var(--primary);
+            position: relative;
+        }
+        
+        .flow-step::after {
+            content: '←';
+            position: absolute;
+            left: -20px;
+            color: var(--secondary);
+        }
+        
+        .flow-step:last-child::after { display: none; }
+        
+        footer {
+            background: rgba(15,23,42,0.9);
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 2px solid var(--primary);
+        }
+        
+        footer p { color: #64748b; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 25px; }
+            nav ul { gap: 5px; }
+            nav a { padding: 6px 12px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>🖥️ نظام إدارة مغاسل السيارات</h1>
+        <p>POS & Management System - نظام نقاط بيع وإدارة تشغيل</p>
+        <div>
+            <span class="badge badge-new">⚡ إصدار 2.0 - تغيير جذري</span>
+            <span class="badge">📱 SUNMI V2s</span>
+            <span class="badge">🏦 بنك إنماء</span>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#changes">التغييرات</a></li>
+            <li><a href="#actors">الجهات الفاعلة</a></li>
+            <li><a href="#shifts">الورديات</a></li>
+            <li><a href="#pos">نقاط البيع</a></li>
+            <li><a href="#hardware">العتاد</a></li>
+            <li><a href="#offline">Offline</a></li>
+            <li><a href="#tech">التقنية</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- التغيير الجوهري -->
+        <section id="changes" class="section" style="background: linear-gradient(135deg, rgba(239,68,68,0.3), rgba(15,23,42,0.9));">
+            <h2 class="section-title"><span>⚠️</span> تغيير جوهري في نطاق المشروع</h2>
+            
+            <div class="alert alert-danger">
+                <span style="font-size: 2rem;">🔄</span>
+                <div>
+                    <strong>تحول من:</strong> منصة توصيل خدمات (مثل سويت)<br>
+                    <strong>إلى:</strong> نظام إدارة تشغيل ومبيعات داخلي (POS & ERP)
+                </div>
+            </div>
+
+            <h3 style="color: var(--danger); margin: 25px 0 15px;">❌ ما تم حذفه</h3>
+            <div class="grid">
+                <div class="card" style="opacity: 0.6; border-color: var(--danger);">
+                    <h3 class="deleted">📱 تطبيق العميل</h3>
+                    <p class="deleted">لا يوجد تسجيل دخول للعملاء، لا حجز مواعيد</p>
+                </div>
+                <div class="card" style="opacity: 0.6; border-color: var(--danger);">
+                    <h3 class="deleted">🚗 تتبع الكابتن</h3>
+                    <p class="deleted">لا يوجد غسيل متنقل أو تتبع على الخريطة</p>
+                </div>
+                <div class="card" style="opacity: 0.6; border-color: var(--danger);">
+                    <h3 class="deleted">🍎 Apple Pay</h3>
+                    <p class="deleted">لا حاجة لبوابات دفع في تطبيق جوال</p>
+                </div>
+                <div class="card" style="opacity: 0.6; border-color: var(--danger);">
+                    <h3 class="deleted">📢 التسويق والعروض</h3>
+                    <p class="deleted">لا إشعارات ترويجية للعملاء</p>
+                </div>
+            </div>
+
+            <h3 style="color: var(--success); margin: 30px 0 15px;">✅ التركيز الجديد</h3>
+            <div class="grid">
+                <div class="card" style="border-color: var(--success);">
+                    <h3>⚡ السرعة</h3>
+                    <p>إنشاء طلب في <strong>أقل من 10 ثوانٍ</strong></p>
+                    <span class="tag" style="background: var(--success);">الأولوية #1</span>
+                </div>
+                <div class="card" style="border-color: var(--success);">
+                    <h3>📴 العمل Offline</h3>
+                    <p>يعمل بالكامل <strong>بدون إنترنت</strong></p>
+                    <span class="tag" style="background: var(--success);">حرج</span>
+                </div>
+                <div class="card" style="border-color: var(--success);">
+                    <h3>💰 إدارة الورديات</h3>
+                    <p>فتح/إغلاق الصندوق ومطابقة المبالغ</p>
+                    <span class="tag" style="background: var(--success);">أساسي</span>
+                </div>
+                <div class="card" style="border-color: var(--success);">
+                    <h3>🖨️ الطباعة الفورية</h3>
+                    <p>فاتورة مطبوعة بعد كل عملية</p>
+                    <span class="tag" style="background: var(--success);">أساسي</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- الجهات الفاعلة -->
+        <section id="actors" class="section">
+            <h2 class="section-title"><span>👥</span> الجهات الفاعلة (Actors)</h2>
+            
+            <div class="grid">
+                <div class="card" style="border: 2px solid var(--primary);">
+                    <h3>🧑‍💼 الكاشير (Cashier)</h3>
+                    <p>يستقبل السيارات، يحدد الخدمات، يحاسب العملاء</p>
+                    <span class="tag">جهاز SUNMI V2s</span>
+                </div>
+                <div class="card" style="border: 2px solid var(--secondary);">
+                    <h3>👨‍💻 المشرف (Supervisor)</h3>
+                    <p>يفتح/يغلق الورديات، يراقب الأداء، يوافق على الخصومات</p>
+                    <span class="tag">SUNMI / Tablet</span>
+                </div>
+                <div class="card">
+                    <h3>👷 العامل (Worker)</h3>
+                    <p>ينفذ خدمات الغسيل، يستلم المهام</p>
+                    <span class="tag" style="background: #64748b;">تطبيق مبسط (اختياري)</span>
+                </div>
+                <div class="card">
+                    <h3>👔 المدير (Admin)</h3>
+                    <p>يدير المحطة والموظفين والتسعير</p>
+                    <span class="tag">لوحة ويب</span>
+                </div>
+            </div>
+
+            <h3 style="color: var(--secondary); margin: 30px 0 15px;">📊 مصفوفة الصلاحيات</h3>
+            <table>
+                <thead>
+                    <tr><th>الصلاحية</th><th>الكاشير</th><th>المشرف</th><th>العامل</th><th>المدير</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>إنشاء طلب جديد</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td></tr>
+                    <tr><td>إلغاء طلب</td><td>🟡</td><td>✅</td><td>❌</td><td>✅</td></tr>
+                    <tr><td>فتح/إغلاق وردية</td><td>❌</td><td>✅</td><td>❌</td><td>✅</td></tr>
+                    <tr><td>استرداد المبالغ</td><td>❌</td><td>✅</td><td>❌</td><td>✅</td></tr>
+                    <tr><td>تعديل الأسعار</td><td>❌</td><td>❌</td><td>❌</td><td>✅</td></tr>
+                    <tr><td>التقارير المالية</td><td>❌</td><td>🟡</td><td>❌</td><td>✅</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- إدارة الورديات -->
+        <section id="shifts" class="section">
+            <h2 class="section-title"><span>🔄</span> إدارة الورديات (Shift Management)</h2>
+            
+            <div class="alert alert-warning">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                    <strong>هام جداً:</strong> إدارة الورديات هي الميزة الأهم لضمان سلامة المحاسبة ومنع السرقة أو العجز
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🟢 فتح الوردية (Open Shift)</h3>
+                    <ol style="padding-right: 20px; margin-top: 10px;">
+                        <li>تسجيل دخول المشرف</li>
+                        <li>إدخال المبلغ الافتتاحي</li>
+                        <li>تأكيد فتح الوردية</li>
+                    </ol>
+                </div>
+                <div class="card">
+                    <h3>🔴 إغلاق الوردية (Close Shift)</h3>
+                    <ol style="padding-right: 20px; margin-top: 10px;">
+                        <li>عد المبلغ النقدي الفعلي</li>
+                        <li>مقارنة مع المبلغ النظامي</li>
+                        <li>تسجيل الفرق (عجز/زيادة)</li>
+                        <li>طباعة Z-Report</li>
+                    </ol>
+                </div>
+            </div>
+
+            <h3 style="color: var(--secondary); margin: 25px 0 15px;">💵 مطابقة الصندوق (Cash Reconciliation)</h3>
+            <div class="device-box">
+                <p style="font-size: 1.1rem;">
+                    المبلغ النهائي = <strong>المبلغ الافتتاحي</strong> + <strong>المبيعات النقدية</strong> - <strong>المستردات</strong>
+                </p>
+                <div style="margin-top: 20px;">
+                    <span class="tag" style="background: var(--success);">✅ تطابق = إغلاق ناجح</span>
+                    <span class="tag" style="background: var(--warning);">⚠️ زيادة = مراجعة</span>
+                    <span class="tag" style="background: var(--danger);">❌ عجز = تحقيق</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- نقاط البيع -->
+        <section id="pos" class="section">
+            <h2 class="section-title"><span>🖥️</span> نقاط البيع (POS)</h2>
+            
+            <h3 style="color: var(--primary); margin: 20px 0 15px;">⚡ إنشاء طلب سريع (< 10 ثوانٍ)</h3>
+            <div class="flow-steps">
+                <div class="flow-step">1️⃣ اختيار الخدمة</div>
+                <div class="flow-step">2️⃣ تحديد الكمية</div>
+                <div class="flow-step">3️⃣ الدفع</div>
+                <div class="flow-step">4️⃣ طباعة الفاتورة</div>
+            </div>
+
+            <h3 style="color: var(--secondary); margin: 25px 0 15px;">💰 شاشة الدفع النقدي</h3>
+            <div class="grid">
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: var(--accent);">إجمالي المبلغ</h3>
+                    <p style="font-size: 2.5rem; font-weight: bold;">46.0 ر.س</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: var(--success);">المبلغ المدفوع</h3>
+                    <p style="font-size: 2.5rem; font-weight: bold;">50.0 ر.س</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: var(--primary);">الباقي</h3>
+                    <p style="font-size: 2.5rem; font-weight: bold;">4.0 ر.س</p>
+                </div>
+            </div>
+            <p style="margin-top: 15px; color: #94a3b8; text-align: center;">
+                أزرار فئات سريعة: <strong>10</strong> | <strong>50</strong> | <strong>100</strong> | <strong>200</strong> ريال
+            </p>
+
+            <h3 style="color: var(--secondary); margin: 25px 0 15px;">💳 طرق الدفع</h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>💵 نقدي (Cash)</h3>
+                    <p>الطريقة الأساسية - بدون رسوم</p>
+                </div>
+                <div class="card" style="border: 2px solid var(--primary);">
+                    <h3>🏦 بنك إنماء</h3>
+                    <p>mada + Visa/Mastercard</p>
+                    <span class="tag">البوابة الرسمية</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- العتاد -->
+        <section id="hardware" class="section">
+            <h2 class="section-title"><span>🔧</span> التكامل مع العتاد (Hardware)</h2>
+            
+            <div class="device-box">
+                <h3>📱 SUNMI V2s</h3>
+                <p style="font-size: 1.1rem; margin-top: 15px;">جهاز نقاط البيع الأساسي</p>
+                <div class="grid" style="margin-top: 20px;">
+                    <div><strong>🖨️ طابعة حرارية</strong><br>58mm مدمجة</div>
+                    <div><strong>📶 الاتصال</strong><br>WiFi + 4G + NFC</div>
+                    <div><strong>💳 قارئ البطاقات</strong><br>Chip + Contactless</div>
+                    <div><strong>📷 كاميرا</strong><br>لقراءة الباركود</div>
+                </div>
+            </div>
+
+            <h3 style="color: var(--secondary); margin: 25px 0 15px;">📦 حزم Flutter المطلوبة</h3>
+            <table>
+                <thead>
+                    <tr><th>الحزمة</th><th>الاستخدام</th><th>إلزامي</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>sunmi_printer_plus</code></td><td>الطباعة الحرارية</td><td>✅</td></tr>
+                    <tr><td><code>isar</code> / <code>sqflite</code></td><td>قاعدة بيانات محلية</td><td>✅</td></tr>
+                    <tr><td><code>connectivity_plus</code></td><td>مراقبة الاتصال</td><td>✅</td></tr>
+                    <tr><td><code>get</code></td><td>State Management</td><td>✅</td></tr>
+                    <tr><td><code>flutter_nfc_kit</code></td><td>قراءة NFC</td><td>اختياري</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Offline First -->
+        <section id="offline" class="section" style="background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(15,23,42,0.9));">
+            <h2 class="section-title"><span>📴</span> العمل بدون إنترنت (Offline First)</h2>
+            
+            <div class="alert alert-success">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                    <strong>متطلب حرج:</strong> المغاسل قد تكون في مواقف سفلية (Basements) أو مناطق الشبكة فيها ضعيفة
+                </div>
+            </div>
+
+            <div class="alert alert-warning" style="margin-top: 15px;">
+                <span style="font-size: 1.5rem;">💳</span>
+                <div>
+                    <strong>تنبيه هام:</strong> الدفع بالبطاقات (mada/Visa/Mastercard) يتطلب <strong>إنترنت إلزامياً</strong> للتواصل مع بنك إنماء. وضع Offline يدعم <strong>الدفع النقدي فقط</strong>.
+                </div>
+            </div>
+
+            <h3 style="color: var(--success); margin: 25px 0 15px;">✅ يعمل بدون إنترنت (Offline)</h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>📝 إنشاء الطلبات</h3>
+                    <p>يمكن إنشاء وإدارة الطلبات بالكامل</p>
+                </div>
+                <div class="card">
+                    <h3>💵 الدفع النقدي</h3>
+                    <p>استلام المبالغ النقدية وحساب الباقي</p>
+                </div>
+                <div class="card">
+                    <h3>🖨️ طباعة الفواتير</h3>
+                    <p>طباعة فورية من جهاز SUNMI</p>
+                </div>
+                <div class="card">
+                    <h3>💾 حفظ البيانات</h3>
+                    <p>جميع البيانات تُحفظ محلياً (Isar/SQLite)</p>
+                </div>
+            </div>
+
+            <h3 style="color: var(--danger); margin: 25px 0 15px;">❌ يتطلب إنترنت (Online Required)</h3>
+            <div class="grid">
+                <div class="card" style="border-color: var(--danger);">
+                    <h3>💳 الدفع بالبطاقات</h3>
+                    <p>mada, Visa, Mastercard - يتطلب اتصال ببنك إنماء</p>
+                </div>
+                <div class="card" style="border-color: var(--danger);">
+                    <h3>🔄 مزامنة البيانات</h3>
+                    <p>رفع البيانات للسيرفر المركزي</p>
+                </div>
+            </div>
+
+            <div class="alert alert-success" style="margin-top: 20px;">
+                <span style="font-size: 1.5rem;">💡</span>
+                <div>
+                    <strong>الحل:</strong> عند عدم وجود إنترنت، يُطلب من العميل الدفع نقداً. وعند عودة الاتصال، تتم المزامنة التلقائية.
+                </div>
+            </div>
+        </section>
+
+        <!-- الهيكلة التقنية -->
+        <section id="tech" class="section">
+            <h2 class="section-title"><span>⚙️</span> الهيكلة التقنية (Flutter)</h2>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>📱 Platform</h3>
+                    <p>Flutter (Android focused)</p>
+                </div>
+                <div class="card">
+                    <h3>💾 Database</h3>
+                    <p>Isar / SQLite (Offline)</p>
+                </div>
+                <div class="card">
+                    <h3>🔄 State</h3>
+                    <p>GetX Controllers</p>
+                </div>
+                <div class="card">
+                    <h3>🖨️ Hardware</h3>
+                    <p>SUNMI SDK</p>
+                </div>
+            </div>
+
+            <h3 style="color: var(--secondary); margin: 25px 0 15px;">📁 هيكل المشروع</h3>
+            <div class="card" style="font-family: monospace; direction: ltr; text-align: left;">
+                <pre style="color: var(--secondary);">
+lib/
+├── main.dart
+├── core/
+│   ├── database/        # Isar/SQLite
+│   ├── services/
+│   │   ├── printer_service.dart
+│   │   ├── sync_service.dart
+│   │   └── payment_service.dart
+├── features/
+│   ├── auth/            # تسجيل الدخول
+│   ├── pos/             # نقاط البيع
+│   ├── shift/           # إدارة الورديات
+│   ├── reports/         # التقارير
+│   └── settings/
+└── widgets/             # مكونات مشتركة
+                </pre>
+            </div>
+        </section>
+
+        <!-- خطة الإصدارات -->
+        <section class="section">
+            <h2 class="section-title"><span>📅</span> خطة الإصدارات</h2>
+            <table>
+                <thead>
+                    <tr><th>الإصدار</th><th>النطاق</th><th>المدة</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>MVP 1.0</strong></td><td>نقاط البيع، الدفع النقدي، الطباعة</td><td>2-3 أشهر</td></tr>
+                    <tr><td>1.1</td><td>إدارة الورديات، تكامل بنك إنماء</td><td>+1 شهر</td></tr>
+                    <tr><td>1.2</td><td>برنامج الولاء، لوحة الإدارة</td><td>+2 شهر</td></tr>
+                    <tr><td>2.0</td><td>تعدد الفروع، تقارير متقدمة</td><td>+2 شهر</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ملخص -->
+        <section class="section" style="background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(239,68,68,0.2));">
+            <h2 class="section-title"><span>📊</span> ملخص التحول</h2>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>العنصر</th><th>قبل ❌</th><th>بعد ✅</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>نوع التطبيق</td><td>منصة للعملاء</td><td>نظام داخلي للموظفين</td></tr>
+                    <tr><td>المستخدمون</td><td>العملاء + الكباتن</td><td>الكاشير + المشرف + العمال</td></tr>
+                    <tr><td>الأجهزة</td><td>هواتف متنوعة</td><td>SUNMI V2s</td></tr>
+                    <tr><td>الدفع</td><td>Apple Pay, mada, إلخ</td><td>نقدي + بنك إنماء</td></tr>
+                    <tr><td>الإنترنت</td><td>مطلوب دائماً</td><td>Offline First</td></tr>
+                    <tr><td>التركيز</td><td>تجربة العميل</td><td>الكفاءة التشغيلية</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <footer>
+        <p>🖥️ نظام إدارة مغاسل السيارات - POS & Management System</p>
+        <p style="margin-top: 10px;">الإصدار 2.0 | ديسمبر 2024 | 🏦 بنك إنماء</p>
+    </footer>
+</body>
+</html>

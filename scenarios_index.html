@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WashPOS - تحليل السيناريوهات المعمارية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #21262d 100%);
+            min-height: 100vh;
+            color: #c9d1d9;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(40, 167, 69, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(13, 110, 253, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #28a745, #0d6efd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #8b949e;
+            margin-bottom: 30px;
+        }
+
+        /* Scenarios Grid */
+        .scenarios {
+            max-width: 1200px;
+            margin: -60px auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .scenario-card {
+            border-radius: 24px;
+            overflow: hidden;
+            transition: transform 0.4s, box-shadow 0.4s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .scenario-card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* Scenario 1 - Green */
+        .scenario-1 {
+            background: linear-gradient(180deg, #155724 0%, #0d3618 100%);
+            border: 2px solid #28a74530;
+        }
+
+        .scenario-1:hover {
+            box-shadow: 0 25px 50px rgba(40, 167, 69, 0.25);
+            border-color: #28a745;
+        }
+
+        /* Scenario 2 - Blue */
+        .scenario-2 {
+            background: linear-gradient(180deg, #0a4691 0%, #051d40 100%);
+            border: 2px solid #0d6efd30;
+        }
+
+        .scenario-2:hover {
+            box-shadow: 0 25px 50px rgba(13, 110, 253, 0.25);
+            border-color: #0d6efd;
+        }
+
+        .card-header {
+            padding: 40px 30px 30px;
+            text-align: center;
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .card-header p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .card-body {
+            padding: 25px 30px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .features-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .badge.success {
+            background: rgba(40, 167, 69, 0.3);
+            color: #7cf3a1;
+        }
+
+        .badge.warning {
+            background: rgba(255, 193, 7, 0.3);
+            color: #ffe066;
+        }
+
+        .badge.primary {
+            background: rgba(13, 110, 253, 0.3);
+            color: #9ec5fe;
+        }
+
+        .card-footer {
+            padding: 20px 30px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0d6efd, #6ea8fe);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(13, 110, 253, 0.4);
+        }
+
+        /* Comparison Section */
+        .comparison {
+            max-width: 1000px;
+            margin: 0 auto 60px;
+            padding: 40px 20px;
+        }
+
+        .comparison h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #e6edf3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #161b22;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 18px 20px;
+            text-align: right;
+            border-bottom: 1px solid #30363d;
+        }
+
+        th {
+            background: #21262d;
+            color: #e6edf3;
+            font-weight: 700;
+        }
+
+        th:nth-child(2) {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+
+        th:nth-child(3) {
+            background: rgba(13, 110, 253, 0.1);
+            color: #0d6efd;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0d1117;
+            padding: 40px 20px;
+            text-align: center;
+            color: #8b949e;
+            border-top: 1px solid #30363d;
+        }
+
+        .footer p {
+            margin: 10px 0;
+        }
+
+        .footer a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .scenarios { grid-template-columns: 1fr; }
+            table { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-content">
+            <div class="logo">🚗💧</div>
+            <h1>WashPOS</h1>
+            <p>تحليل السيناريوهات المعمارية لنظام نقاط البيع للمغاسل</p>
+        </div>
+    </header>
+
+    <section class="scenarios">
+        <!-- Scenario 1 -->
+        <div class="scenario-card scenario-1">
+            <div class="card-header">
+                <div class="card-icon">🟢</div>
+                <h2>السيناريو الأول</h2>
+                <p>Offline-First Architecture</p>
+            </div>
+            <div class="card-body">
+                <ul class="features-list">
+                    <li>✅ يعمل بدون إنترنت</li>
+                    <li>💾 قاعدة بيانات Isar محلية</li>
+                    <li>🔄 مزامنة خلفية تلقائية</li>
+                    <li>⚡ سرعة فائقة (عمليات محلية)</li>
+                    <li>🛡️ موثوقية عالية جداً</li>
+                </ul>
+                <div class="badge-row">
+                    <span class="badge success">✅ الدفع النقدي Offline</span>
+                    <span class="badge warning">⚠️ البطاقة Online</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="Scenario1_OfflineFirst/index.html" class="btn btn-success">عرض التفاصيل والمخططات ←</a>
+            </div>
+        </div>
+
+        <!-- Scenario 2 -->
+        <div class="scenario-card scenario-2">
+            <div class="card-header">
+                <div class="card-icon">☁️</div>
+                <h2>السيناريو الثاني</h2>
+                <p>Cloud-Centric Architecture</p>
+            </div>
+            <div class="card-body">
+                <ul class="features-list">
+                    <li>☁️ السيرفر مصدر الحقيقة</li>
+                    <li>⚡ تقارير لحظية Real-Time</li>
+                    <li>🔄 لا حاجة للمزامنة</li>
+                    <li>🛠️ سهولة التطوير</li>
+                    <li>📊 بيانات موحدة فوراً</li>
+                </ul>
+                <div class="badge-row">
+                    <span class="badge warning">⚠️ يتطلب إنترنت دائم</span>
+                    <span class="badge primary">🚫 شاشة حظر</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="Scenario2_CloudCentric/index.html" class="btn btn-primary">عرض التفاصيل والمخططات ←</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="comparison">
+        <h2>📊 مقارنة سريعة</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>المعيار</th>
+                    <th>🟢 Offline-First</th>
+                    <th>☁️ Cloud-Centric</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>الاتصال بالإنترنت</td>
+                    <td>اختياري</td>
+                    <td>إلزامي</td>
+                </tr>
+                <tr>
+                    <td>الدفع النقدي Offline</td>
+                    <td>✅ نعم</td>
+                    <td>❌ لا</td>
+                </tr>
+                <tr>
+                    <td>قاعدة بيانات محلية</td>
+                    <td>✅ Isar</td>
+                    <td>❌ لا يوجد</td>
+                </tr>
+                <tr>
+                    <td>التقارير اللحظية</td>
+                    <td>بعد المزامنة</td>
+                    <td>✅ فوري</td>
+                </tr>
+                <tr>
+                    <td>تعقيد التطوير</td>
+                    <td>عالي</td>
+                    <td>منخفض</td>
+                </tr>
+                <tr>
+                    <td>الموثوقية</td>
+                    <td>✅ عالية جداً</td>
+                    <td>تعتمد على الشبكة</td>
+                </tr>
+                <tr>
+                    <td>الأنسب لـ</td>
+                    <td>شبكة غير مستقرة</td>
+                    <td>شبكة مستقرة</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer class="footer">
+        <p>📐 تحليل معماري لنظام WashPOS | ديسمبر 2024</p>
+        <p>📁 الملفات: <a href="Scenario1_OfflineFirst/">مجلد السيناريو الأول</a> | <a href="Scenario2_CloudCentric/">مجلد السيناريو الثاني</a></p>
+    </footer>
+</body>
+</html>
