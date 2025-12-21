@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل المطورين الشامل - WashPOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.8;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            border-bottom: 2px solid var(--primary);
+        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .header p { color: var(--text-muted); font-size: 1.2rem; }
+        .badges { display: flex; justify-content: center; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .badge { padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; }
+        .badge-purple { background: rgba(99, 102, 241, 0.3); color: #a5b4fc; }
+        .badge-green { background: rgba(16, 185, 129, 0.3); color: #6ee7b7; }
+        .badge-yellow { background: rgba(245, 158, 11, 0.3); color: #fcd34d; }
+        
+        /* Navigation */
+        .nav { background: var(--bg-card); padding: 15px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+        .nav ul { display: flex; gap: 20px; list-style: none; justify-content: center; flex-wrap: wrap; }
+        .nav a { color: var(--text-muted); text-decoration: none; padding: 8px 15px; border-radius: 8px; transition: all 0.3s; }
+        .nav a:hover { background: var(--primary); color: white; }
+        
+        /* Section */
+        .section { padding: 40px 0; border-bottom: 1px solid var(--border); }
+        .section-title { font-size: 1.6rem; color: white; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+        
+        /* Cards */
+        .grid { display: grid; gap: 20px; }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        
+        /* Code */
+        pre { background: #0d1117; border-radius: 8px; padding: 15px; overflow-x: auto; margin: 15px 0; direction: ltr; text-align: left; }
+        code { font-family: 'Fira Code', monospace; font-size: 0.85rem; color: #a5b4fc; }
+        .code-title { background: #161b22; padding: 8px 15px; border-radius: 8px 8px 0 0; font-size: 0.85rem; color: var(--text-muted); margin-bottom: -15px; direction: ltr; }
+        
+        /* Table */
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { padding: 12px; text-align: right; border-bottom: 1px solid var(--border); }
+        th { background: rgba(99, 102, 241, 0.2); }
+        
+        /* Alert */
+        .alert { padding: 15px 20px; border-radius: 8px; margin: 15px 0; }
+        .alert-info { background: rgba(59, 130, 246, 0.15); border-right: 4px solid #3b82f6; }
+        .alert-warning { background: rgba(245, 158, 11, 0.15); border-right: 4px solid #f59e0b; }
+        .alert-success { background: rgba(16, 185, 129, 0.15); border-right: 4px solid #10b981; }
+        .alert-danger { background: rgba(239, 68, 68, 0.15); border-right: 4px solid #ef4444; }
+        
+        /* List */
+        .list { list-style: none; }
+        .list li { padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        .list li:last-child { border-bottom: none; }
+        .check { color: var(--secondary); }
+        
+        /* Diagram */
+        .diagram { background: #0d1117; border-radius: 8px; padding: 20px; overflow-x: auto; }
+        .diagram pre { background: transparent; padding: 0; margin: 0; color: #7dd3fc; font-size: 0.8rem; }
+        
+        /* Footer */
+        .footer { text-align: center; padding: 40px; color: var(--text-muted); }
+        
+        @media print {
+            .nav { display: none; }
+            .section { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <h1>🚗💧 WashPOS - دليل المطورين الشامل</h1>
+    <p>كل ما يحتاجه المطور لبناء نظام نقاط البيع للمغاسل</p>
+    <div class="badges">
+        <span class="badge badge-purple">Flutter 3.19+</span>
+        <span class="badge badge-green">Offline-First</span>
+        <span class="badge badge-yellow">SUNMI V2s</span>
+        <span class="badge badge-purple">NFC Payment</span>
+    </div>
+</header>
+
+<nav class="nav">
+    <ul>
+        <li><a href="#overview">نظرة عامة</a></li>
+        <li><a href="#architecture">المعمارية</a></li>
+        <li><a href="#packages">المكتبات</a></li>
+        <li><a href="#structure">هيكل المشروع</a></li>
+        <li><a href="#payment">الدفع</a></li>
+        <li><a href="#sync">المزامنة</a></li>
+        <li><a href="#api">API</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+
+<!-- Overview Section -->
+<section class="section" id="overview">
+    <h2 class="section-title">📊 نظرة عامة</h2>
+    
+    <div class="grid grid-3">
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2.5rem; color: var(--primary);">30</div>
+            <div style="color: var(--text-muted);">ثانية للبيع الكامل</div>
+        </div>
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2.5rem; color: var(--secondary);">3-4</div>
+            <div style="color: var(--text-muted);">نقرات فقط</div>
+        </div>
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2.5rem; color: var(--warning);">100%</div>
+            <div style="color: var(--text-muted);">Offline للنقد</div>
+        </div>
+    </div>
+    
+    <div class="alert alert-info" style="margin-top: 20px;">
+        <strong>🎯 الهدف:</strong> تطبيق POS سريع للمغاسل يعمل على جهاز SUNMI V2s مع دعم الدفع النقدي (offline) والدفع NFC (online)
+    </div>
+</section>
+
+<!-- Architecture Section -->
+<section class="section" id="architecture">
+    <h2 class="section-title">🏗️ المعمارية</h2>
+    
+    <div class="diagram">
+        <pre>
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            WashPOS Architecture                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                      PRESENTATION (Screens)                            │ │
+│  │   LoginScreen → ServicesScreen → PaymentScreen → SuccessScreen        │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                    │                                        │
+│                                    ▼                                        │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                      CONTROLLERS (GetX)                                │ │
+│  │   AuthController │ ProductsController │ PaymentController │ SyncCtrl  │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                    │                                        │
+│           ┌────────────────────────┼────────────────────────┐              │
+│           ▼                        ▼                        ▼              │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────────┐    │
+│  │  LOCAL (Isar)   │    │   API (Dio)     │    │  HARDWARE           │    │
+│  │  - Transactions │    │   - REST API    │    │  - Printer (SUNMI)  │    │
+│  │  - Products     │    │   - Auth        │    │  - NFC (PAY SDK)    │    │
+│  │  - Sync Queue   │    │   - Sync        │    │                     │    │
+│  └─────────────────┘    └─────────────────┘    └─────────────────────┘    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+        </pre>
+    </div>
+</section>
+
+<!-- Packages Section -->
+<section class="section" id="packages">
+    <h2 class="section-title">📦 المكتبات المطلوبة</h2>
+    
+    <div class="code-title">pubspec.yaml</div>
+    <pre><code>dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State Management
+  get: ^4.6.6
+  
+  # Database
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  
+  # Network
+  dio: ^5.4.0
+  connectivity_plus: ^5.0.2
+  
+  # Hardware
+  sunmi_printer_plus: ^1.3.5
+  
+  # ZATCA
+  zatca_fatoora_flutter: ^1.0.0
+  
+  # Utilities
+  uuid: ^4.2.2
+  intl: ^0.18.1
+  json_annotation: ^4.8.1
+  crypto: ^3.0.3
+  lottie: ^3.0.0
+
+dev_dependencies:
+  build_runner: ^2.4.7
+  isar_generator: ^3.1.0+1
+  json_serializable: ^6.7.1</code></pre>
+    
+    <div class="alert alert-warning">
+        <strong>⚠️ NFC Payment:</strong> الدفع NFC يستخدم SUNMI PAY SDK V2 (Native Android AAR) وليس مكتبة Flutter - يتم التواصل عبر Platform Channels
+    </div>
+    
+    <table>
+        <thead>
+            <tr><th>المكتبة</th><th>الوظيفة</th><th>ملاحظات</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>get</code></td><td>State + Navigation + DI</td><td>أخف من Provider/Bloc</td></tr>
+            <tr><td><code>isar</code></td><td>قاعدة بيانات محلية</td><td>أسرع 10x من SQLite</td></tr>
+            <tr><td><code>dio</code></td><td>HTTP Client</td><td>يدعم Interceptors</td></tr>
+            <tr><td><code>sunmi_printer_plus</code></td><td>الطباعة الحرارية</td><td>SDK رسمي لـ SUNMI</td></tr>
+            <tr><td><code>zatca_fatoora_flutter</code></td><td>QR Code الضريبي</td><td>متوافق مع ZATCA</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Project Structure Section -->
+<section class="section" id="structure">
+    <h2 class="section-title">📁 هيكل المشروع</h2>
+    
+    <pre><code>lib/
+├── main.dart
+├── app/
+│   ├── bindings/
+│   │   └── initial_binding.dart
+│   ├── routes/
+│   │   ├── app_pages.dart
+│   │   └── app_routes.dart
+│   └── theme/
+│       └── app_theme.dart
+│
+├── core/
+│   ├── constants/
+│   ├── utils/
+│   └── services/
+│       ├── connectivity_service.dart
+│       ├── sync_service.dart
+│       └── printer_service.dart
+│
+├── data/
+│   ├── models/
+│   │   ├── product.dart
+│   │   ├── invoice.dart
+│   │   └── local_transaction.dart
+│   ├── repositories/
+│   │   ├── product_repository.dart
+│   │   └── invoice_repository.dart
+│   └── providers/
+│       ├── api_provider.dart
+│       └── local_provider.dart
+│
+├── modules/
+│   ├── auth/
+│   ├── home/
+│   ├── payment/
+│   └── settings/
+│
+└── widgets/
+    └── common/</code></pre>
+</section>
+
+<!-- Payment Section -->
+<section class="section" id="payment">
+    <h2 class="section-title">💳 نظام الدفع</h2>
+    
+    <div class="grid grid-2">
+        <div class="card">
+            <h3 style="color: var(--secondary); margin-bottom: 15px;">💵 الدفع النقدي (Offline)</h3>
+            <ul class="list">
+                <li><span class="check">✓</span> يعمل بدون إنترنت</li>
+                <li><span class="check">✓</span> حفظ محلي في Isar</li>
+                <li><span class="check">✓</span> طباعة فورية</li>
+                <li><span class="check">✓</span> مزامنة لاحقة</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3 style="color: var(--primary); margin-bottom: 15px;">📱 الدفع NFC (Online)</h3>
+            <ul class="list">
+                <li><span class="check">✓</span> mada Contactless</li>
+                <li><span class="check">✓</span> Apple Pay / Google Pay</li>
+                <li><span class="check">✓</span> Visa / Mastercard</li>
+                <li><span class="check">✓</span> STC Pay / mada Pay</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h3 style="margin: 30px 0 15px;">معمارية الدفع NFC</h3>
+    <div class="diagram">
+        <pre>
+Flutter App (Dart)
+        │
+        │ MethodChannel('com.washpos/payment')
+        ▼
+Native Android (Kotlin)
+        │
+        │ SUNMI PAY SDK V2 (.aar)
+        ▼
+Payment Gateway (Geidea/PayTabs/Tap)
+        │
+        ▼
+Bank Network (mada/Visa/MC)
+        </pre>
+    </div>
+    
+    <h3 style="margin: 30px 0 15px;">كود Platform Channel</h3>
+    
+    <div class="code-title">Dart Side - lib/core/services/payment_channel.dart</div>
+    <pre><code>import 'package:flutter/services.dart';
+
+class SunmiPaymentChannel {
+  static const _channel = MethodChannel('com.washpos/payment');
+  
+  static Future&lt;Map&lt;String, dynamic&gt;&gt; processNFCPayment({
+    required double amount,
+    required String invoiceId,
+  }) async {
+    try {
+      final result = await _channel.invokeMethod('processNFCPayment', {
+        'amount': (amount * 100).round(), // Halalas
+        'invoiceId': invoiceId,
+        'currencyCode': 'SAR',
+      });
+      return Map&lt;String, dynamic&gt;.from(result);
+    } on PlatformException catch (e) {
+      return {'success': false, 'error': e.message};
+    }
+  }
+  
+  static Future&lt;void&gt; cancelPayment() async {
+    await _channel.invokeMethod('cancelPayment');
+  }
+}</code></pre>
+
+    <div class="code-title">Kotlin Side - android/app/src/.../MainActivity.kt</div>
+    <pre><code>class MainActivity : FlutterActivity() {
+    private val CHANNEL = "com.washpos/payment"
+    
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+            .setMethodCallHandler { call, result -&gt;
+                when (call.method) {
+                    "processNFCPayment" -&gt; {
+                        val amount = call.argument&lt;Int&gt;("amount") ?: 0
+                        val invoiceId = call.argument&lt;String&gt;("invoiceId") ?: ""
+                        // Call SUNMI PAY SDK here
+                        processPayment(amount, invoiceId, result)
+                    }
+                    "cancelPayment" -&gt; {
+                        cancelCurrentPayment()
+                        result.success(null)
+                    }
+                    else -&gt; result.notImplemented()
+                }
+            }
+    }
+}</code></pre>
+</section>
+
+<!-- Sync Section -->
+<section class="section" id="sync">
+    <h2 class="section-title">🔄 نظام المزامنة</h2>
+    
+    <div class="diagram">
+        <pre>
+┌──────────────────────────────────────────────────────────────────┐
+│                        Sync State Machine                         │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│    ┌─────────┐                                                   │
+│    │ PENDING │ ──────────────────┐                              │
+│    └────┬────┘                   │                              │
+│         │ Internet Available     │ No Internet                  │
+│         ▼                        │                              │
+│    ┌─────────┐                   │                              │
+│    │ SYNCING │                   │                              │
+│    └────┬────┘                   │                              │
+│    ┌────┴────┐                   │                              │
+│    │         │                   │                              │
+│    ▼         ▼                   │                              │
+│ ┌──────┐ ┌──────┐               │                              │
+│ │SYNCED│ │FAILED│───────────────┘                              │
+│ └──────┘ └───┬──┘                                               │
+│              │ Retry (Max 5)                                    │
+│              └──────────▶ PENDING                               │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+        </pre>
+    </div>
+    
+    <h3 style="margin: 30px 0 15px;">Schema للمعاملة المحلية</h3>
+    <div class="code-title">lib/data/models/local_transaction.dart</div>
+    <pre><code>import 'package:isar/isar.dart';
+
+part 'local_transaction.g.dart';
+
+@collection
+class LocalTransaction {
+  Id id = Isar.autoIncrement;
+  
+  @Index(unique: true)
+  late String localId;       // UUID
+  
+  String? serverId;          // من السيرفر بعد المزامنة
+  
+  late String invoiceData;   // JSON
+  late String receiptData;   // JSON
+  
+  @enumerated
+  SyncStatus syncStatus = SyncStatus.pending;
+  
+  int retryCount = 0;
+  DateTime createdAt = DateTime.now();
+  DateTime? syncedAt;
+}
+
+enum SyncStatus { pending, syncing, synced, failed }</code></pre>
+
+    <h3 style="margin: 30px 0 15px;">Sync Service</h3>
+    <div class="code-title">lib/core/services/sync_service.dart</div>
+    <pre><code>class SyncService extends GetxService {
+  final _isar = Get.find&lt;Isar&gt;();
+  final _api = Get.find&lt;ApiProvider&gt;();
+  final _connectivity = Get.find&lt;ConnectivityService&gt;();
+  
+  @override
+  void onInit() {
+    super.onInit();
+    // مراقبة الاتصال
+    ever(_connectivity.isConnected, (connected) {
+      if (connected) syncPending();
+    });
+  }
+  
+  Future&lt;void&gt; syncPending() async {
+    final pending = await _isar.localTransactions
+        .filter()
+        .syncStatusEqualTo(SyncStatus.pending)
+        .findAll();
+    
+    for (final tx in pending) {
+      await _syncTransaction(tx);
+    }
+  }
+  
+  Future&lt;void&gt; _syncTransaction(LocalTransaction tx) async {
+    try {
+      await _isar.writeTxn(() async {
+        tx.syncStatus = SyncStatus.syncing;
+        await _isar.localTransactions.put(tx);
+      });
+      
+      final response = await _api.syncTransaction(
+        data: tx.invoiceData,
+        idempotencyKey: tx.localId,
+      );
+      
+      await _isar.writeTxn(() async {
+        tx.serverId = response.id;
+        tx.syncStatus = SyncStatus.synced;
+        tx.syncedAt = DateTime.now();
+        await _isar.localTransactions.put(tx);
+      });
+      
+    } catch (e) {
+      await _isar.writeTxn(() async {
+        tx.retryCount++;
+        tx.syncStatus = tx.retryCount >= 5 
+            ? SyncStatus.failed 
+            : SyncStatus.pending;
+        await _isar.localTransactions.put(tx);
+      });
+    }
+  }
+}</code></pre>
+</section>
+
+<!-- API Section -->
+<section class="section" id="api">
+    <h2 class="section-title">🔌 API Contract</h2>
+    
+    <div class="alert alert-info">
+        <strong>Base URL:</strong> <code>https://api.washpos.sa/v1</code>
+    </div>
+    
+    <table>
+        <thead>
+            <tr><th>Method</th><th>Endpoint</th><th>الوصف</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>POST</td><td>/auth/login</td><td>تسجيل الدخول</td></tr>
+            <tr><td>POST</td><td>/auth/refresh</td><td>تجديد التوكن</td></tr>
+            <tr><td>GET</td><td>/products</td><td>جلب المنتجات</td></tr>
+            <tr><td>POST</td><td>/invoices</td><td>إنشاء فاتورة</td></tr>
+            <tr><td>POST</td><td>/receipts</td><td>إنشاء سند</td></tr>
+            <tr><td>POST</td><td>/sync/batch</td><td>مزامنة دفعة</td></tr>
+        </tbody>
+    </table>
+    
+    <h3 style="margin: 30px 0 15px;">Headers المطلوبة</h3>
+    <pre><code>{
+  "Authorization": "Bearer {token}",
+  "Content-Type": "application/json",
+  "Accept-Language": "ar",
+  "X-Device-Id": "{device_uuid}",
+  "X-Idempotency-Key": "{unique_key}"  // للـ POST فقط
+}</code></pre>
+
+    <h3 style="margin: 30px 0 15px;">مثال: إنشاء فاتورة</h3>
+    <div class="code-title">POST /invoices</div>
+    <pre><code>// Request
+{
+  "items": [
+    { "product_id": "p-001", "quantity": 1, "price": 70.00 }
+  ],
+  "payment_method": "cash",
+  "subtotal": 70.00,
+  "tax_amount": 10.50,
+  "total": 80.50
+}
+
+// Response 201
+{
+  "id": "inv-2024-0001",
+  "invoice_number": "INV-2024-0001",
+  "qr_code": "base64...",
+  "created_at": "2024-12-21T15:00:00Z"
+}</code></pre>
+</section>
+
+<!-- Quick Checklist -->
+<section class="section">
+    <h2 class="section-title">✅ قائمة التحقق السريعة</h2>
+    
+    <div class="grid grid-2">
+        <div class="card">
+            <h4 style="margin-bottom: 15px;">🚀 قبل البدء</h4>
+            <ul class="list">
+                <li>☐ Flutter SDK 3.19+</li>
+                <li>☐ جهاز SUNMI V2s للاختبار</li>
+                <li>☐ SUNMI PAY SDK V2 (.aar)</li>
+                <li>☐ حساب Payment Gateway</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h4 style="margin-bottom: 15px;">⚡ أولويات التطوير</h4>
+            <ul class="list">
+                <li>1️⃣ شاشة الخدمات + اختيار الحجم</li>
+                <li>2️⃣ الدفع النقدي + الطباعة</li>
+                <li>3️⃣ نظام المزامنة</li>
+                <li>4️⃣ الدفع NFC</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<footer class="footer">
+    <p>📐 WashPOS Developer Guide | December 2024</p>
+    <p>يمكن طباعة هذه الصفحة أو إرسالها كملف HTML واحد</p>
+</footer>
+
+</body>
+</html>
